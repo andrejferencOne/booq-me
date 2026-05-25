@@ -43,6 +43,26 @@ import { db } from './index';
     console.log('🌱 Vkladám služby...');
     await db.insert(services).values(SAMUEL_SERVICES);
 
+    console.log('👤 Vytváram admin usera (ak este neexistuje)...');
+    const { auth } = await import('../lib/auth');
+    const { eq } = await import('drizzle-orm');
+    const { user } = await import('./schema');
+
+    const adminEmail = 'samuel@booq-me.local';
+    const adminPassword = 'samuel123';
+
+    const [existing] = await db.select().from(user).where(eq(user.email, adminEmail));
+
+    if (existing) {
+      console.log(`ℹ️ Admin uz existuje: ${adminEmail}`);
+    } else {
+      await auth.api.signUpEmail({
+        body: { email: adminEmail, password: adminPassword, name: 'Samuel Agošton' },
+      });
+      console.log(`✅ Admin vytvoreny: ${adminEmail} / ${adminPassword}`);
+      console.log('⚠️  Po prvom prihlaseni zmen heslo (Task 14)');
+    }
+
     console.log('✅ Seed dokončený.');
     process.exit(0);
   };
