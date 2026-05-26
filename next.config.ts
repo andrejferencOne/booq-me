@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ['better-auth', 'better-auth/react', 'better-auth/cookies', 'better-auth/next-js'],
 };
 
 export default nextConfig;
