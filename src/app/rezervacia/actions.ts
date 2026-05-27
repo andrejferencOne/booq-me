@@ -8,6 +8,7 @@ import { computeAvailableSlots } from '@/lib/booking-logic';
 import { startOfDayBratislava, endOfDayBratislava, buildBratislavaDateTime } from '@/lib/timezone';
 import { bookingFormSchema } from '@/lib/validation';
 import type { ActionResult } from '@/lib/action-result';
+import { sendBookingConfirmationToCustomer, sendNewBookingToAdmin } from '@/lib/email';
 
 export const getAvailableSlots = async (
   serviceId: string,
@@ -60,7 +61,6 @@ export const createBooking = async (
   const startTime = buildBratislavaDateTime(date, time);
   const endTime = addMinutes(startTime, service.durationMinutes);
 
-  // race-condition guard: check slot is still free
   const conflict = await db
     .select({ id: bookings.id })
     .from(bookings)
@@ -81,6 +81,25 @@ export const createBooking = async (
     .insert(bookings)
     .values({ serviceId, startTime, endTime, customerName, customerEmail, customerPhone, note })
     .returning({ id: bookings.id });
+
+  await Promise.allSettled([
+    sendBookingConfirmationToCustomer({
+      to: parsed.data.customerEmail,
+      customerName: parsed.data.customerName,
+      serviceName: service.name,
+      startTime,
+      priceCents: service.priceCents,
+      durationMinutes: service.durationMinutes,
+    }),
+    sendNewBookingToAdmin({
+      customerName: parsed.data.customerName,
+      customerEmail: parsed.data.customerEmail,
+      customerPhone: parsed.data.customerPhone,
+      serviceName: service.name,
+      startTime,
+      note: parsed.data.note,
+    }),
+  ]);
 
   return { ok: true, data: { id: booking.id } };
 };
