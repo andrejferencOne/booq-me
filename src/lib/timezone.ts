@@ -25,3 +25,8 @@
   export const getDayOfWeekBratislava = (date: Date): number => {
     return toZonedTime(date, TZ).getDay();
   };
+
+  export const parseLocalToBratislava = (str: string): Date => {
+    const [datePart, timePart] = str.split('T');
+    return buildBratislavaDateTime(datePart, timePart);
+  };
