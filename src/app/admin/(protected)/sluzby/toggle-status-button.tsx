@@ -18,7 +18,7 @@
         onClick={() => {
           startTransition(async () => {
             const result = await toggleServiceStatus(serviceId);
-            if (!result.ok) return toast.error(result.error);
+            if (!result.ok) { toast.error(result.error); return; }
             toast.success(currentStatus === 'ACTIVE' ? 'Deaktivované' : 'Aktivované');
             router.refresh();
           });

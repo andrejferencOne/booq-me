@@ -21,7 +21,7 @@
 
       startTransition(async () => {
         const result = await createBlock({ startLocal, endLocal, reason });
-        if (!result.ok) return toast.error(result.error);
+        if (!result.ok) { toast.error(result.error); return; }
         toast.success('Blokovanie pridané');
         (e.target as HTMLFormElement).reset();
         router.refresh();

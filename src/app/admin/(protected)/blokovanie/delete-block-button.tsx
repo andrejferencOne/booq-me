@@ -17,7 +17,7 @@
           if (!confirm('Naozaj odstrániť toto blokovanie?')) return;
           startTransition(async () => {
             const result = await deleteBlock(id);
-            if (!result.ok) return toast.error(result.error);
+            if (!result.ok) { toast.error(result.error); return; }
             toast.success('Blokovanie odstránené');
             router.refresh();
           });
