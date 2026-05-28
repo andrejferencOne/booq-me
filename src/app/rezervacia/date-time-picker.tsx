@@ -34,7 +34,7 @@
     const date = selectedDate ? new Date(`${selectedDate}T12:00:00`) : undefined;
 
     const updateUrl = (key: 'date' | 'time', value: string) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams ?? undefined);
       params.set(key, value);
       if (key === 'date') params.delete('time');
       router.push(`?${params.toString()}`, { scroll: false });

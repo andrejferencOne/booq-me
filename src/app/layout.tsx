@@ -1,10 +1,12 @@
+export const dynamic = 'force-dynamic';
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { Toaster } from '@/components/ui/sonner';
+import { ClientToaster } from '@/components/client-toaster';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -36,7 +38,7 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
-        <Toaster richColors />
+        <ClientToaster />
       </body>
     </html>
   );

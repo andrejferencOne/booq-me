@@ -16,7 +16,7 @@ export const ServicePicker = ({ services, selectedId }: Props) => {
   const searchParams = useSearchParams();
 
   const handleSelect = (id: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams ?? undefined);
     params.set('serviceId', id);
     params.delete('date');
     params.delete('time');
